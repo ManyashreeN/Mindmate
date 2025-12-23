@@ -1,0 +1,25 @@
+## Consolidated .gitignore
+
+# Ignore backend environment file
+backend/.env
+
+# Ignore backend virtual environment
+backend/venv/
+
+# Python cache and bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Local env files
+.env
+
+# IDE/editor dirs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
