@@ -1,27 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>MindMate - Chat</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-  <h1>💬 Chat Support</h1>
-  <p>Talk freely. I'm here to listen 🌱</p>
+  <header class="navbar">
+    <div class="logo">MindMate 🧠</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="chat.html">Chat</a>
+      <a href="stories.html">Stories</a>
+      <a href="tips.html">Tips</a>
+    </nav>
+  </header>
 
-  <hr>
+  <div class="chat-container">
 
-  <div>
-    <p><strong>You:</strong> I'm feeling stressed about placements.</p>
-    <p><strong>MindMate:</strong> That sounds tough. Want to tell me more?</p>
+    <div class="chat-box">
+      <div class="message bot">
+        Hello 👋 I’m here to listen. How are you feeling today?
+      </div>
+
+      <div class="message user">
+        I’m feeling stressed about placements.
+      </div>
+
+      <div class="message bot">
+        That sounds really tough. Want to tell me what’s worrying you the most?
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" placeholder="Type your message..." disabled>
+      <button disabled>Send</button>
+    </div>
+
   </div>
-
-  <hr>
-
-  <input type="text" placeholder="Type your message here..." />
-  <button>Send</button>
-
-  <br><br>
-  <a href="index.html">⬅ Back to Dashboard</a>
 
 </body>
 </html>
