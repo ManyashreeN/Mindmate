@@ -136,3 +136,46 @@ nav a:hover {
   padding: 10px 16px;
   border-radius: 8px;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  nav a {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .chat-container {
+    max-width: 100%;
+    height: calc(100vh - 120px);
+    margin: 10px;
+    border-radius: 12px;
+  }
+
+  .chat-box {
+    padding: 12px;
+  }
+
+  .message {
+    max-width: 90%;
+    font-size: 14px;
+  }
+
+  .chat-input {
+    padding: 10px;
+  }
+
+  .chat-input input {
+    font-size: 14px;
+  }
+
+  .chat-input button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
