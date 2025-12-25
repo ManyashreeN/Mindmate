@@ -24,7 +24,7 @@
 
     <div class="quote">
       <h2>✨ Quote of the Day</h2>
-      <p>"Believe in yourself. Small steps matter."</p>
+     <p id="quoteText">"Believe in yourself. Small steps matter."</p>
     </div>
 
     <h2>Explore</h2>
@@ -35,6 +35,20 @@
       <a href="tips.html" class="card">💡 Placement Tips</a>
     </div>
   </div>
+
+  <script>
+  const quotes = [
+    "Believe in yourself. Small steps matter.",
+    "Every expert was once a beginner.",
+    "Your future is created by what you do today.",
+    "Consistency beats talent when talent doesn’t work hard.",
+    "You are capable of more than you think."
+  ];
+
+  const quoteElement = document.getElementById("quoteText");
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  quoteElement.textContent = `"${quotes[randomIndex]}"`;
+</script>
 
 </body>
 </html>
