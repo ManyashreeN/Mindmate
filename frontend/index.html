@@ -62,41 +62,43 @@
   </main>
 
 
-  <script>
-  const quotes = {
-    home: [
-      "Believe in yourself. Small steps matter.",
-      "Consistency beats motivation every day.",
-      "Your future is created by what you do today.",
-      "Progress, not perfection."
-    ],
-    stories: [
-      "Every rejection is a redirection.",
-      "Someone else’s success is proof it’s possible.",
-      "Failure is not the opposite of success. It’s part of it.",
-      "Your journey is unique. Own it."
-    ],
-    tips: [
-      "Strong basics create strong confidence.",
-      "Preparation today removes fear tomorrow.",
-      "Skills get you shortlisted. Attitude gets you hired.",
-      "Discipline turns dreams into offers."
-    ]
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // ✅ YOUR REAL CONFIG (adapted)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAGc7ecwllV_lDS-lOedGgIusj6CVr3iA",
+    authDomain: "mindmate-925cb.firebaseapp.com",
+    projectId: "mindmate-925cb",
+    storageBucket: "mindmate-925cb.appspot.com",
+    messagingSenderId: "985607995996",
+    appId: "1:985607995996:web:9ed710e18bc5ade43b1c99"
   };
 
-  // Detect page
-  let pageType = "home";
-  if (window.location.pathname.includes("stories")) pageType = "stories";
-  if (window.location.pathname.includes("tips")) pageType = "tips";
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  // Pick random quote
-  const selectedQuotes = quotes[pageType];
-  const randomQuote =
-    selectedQuotes[Math.floor(Math.random() * selectedQuotes.length)];
+  const quoteBox = document.getElementById("quoteBox");
 
-  // Insert quote
-  document.getElementById("quoteBox").innerText = `"${randomQuote}"`;
+  async function loadQuote() {
+    const q = query(
+      collection(db, "quotes"),
+      where("page", "==", "home")
+    );
+
+    const snapshot = await getDocs(q);
+    const quotes = snapshot.docs.map(doc => doc.data().text);
+
+    if (quotes.length > 0) {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteBox.innerText = `"${randomQuote}"`;
+    }
+  }
+
+  loadQuote();
 </script>
+
 
 </body>
 </html>

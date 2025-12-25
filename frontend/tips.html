@@ -13,105 +13,92 @@
     <p>Small habits that make a big difference.</p>
   </header>
 
+<div class="quote" id="quoteBox"></div>
+
   <!-- Tips Section -->
-  <section class="tips-container">
-
-    <div class="tip-card">
-      <div class="tip-icon">📘</div>
-      <div class="tip-content">
-        <h3>DSA Consistency</h3>
-        <p>
-          Practice at least 2 problems daily. Focus on understanding patterns
-          instead of memorizing solutions.
-        </p>
-      </div>
-    </div>
-
-    <div class="tip-card">
-      <div class="tip-icon">🗣️</div>
-      <div class="tip-content">
-        <h3>Communication Skills</h3>
-        <p>
-          Explain your approach clearly. Interviewers value clarity
-          as much as correctness.
-        </p>
-      </div>
-    </div>
-
-    <div class="tip-card">
-      <div class="tip-icon">📄</div>
-      <div class="tip-content">
-        <h3>Resume Basics</h3>
-        <p>
-          Keep your resume one page, clean, and focused on impact
-          rather than listing tools.
-        </p>
-      </div>
-    </div>
-
-    <!-- EXTRA TIPS (Value Add) -->
-    <div class="tip-card">
-      <div class="tip-icon">🧠</div>
-      <div class="tip-content">
-        <h3>Strong Fundamentals</h3>
-        <p>
-          Revise DBMS, OS, OOPS, and CN regularly.
-          Basics create confidence during interviews.
-        </p>
-      </div>
-    </div>
-
-    <div class="tip-card">
-      <div class="tip-icon">🎤</div>
-      <div class="tip-content">
-        <h3>Mock Interviews</h3>
-        <p>
-          Practice mock interviews to reduce fear and improve real-time thinking.
-        </p>
-      </div>
-    </div>
-
-  </section>
+  <section class="tips-container" id="tipsContainer"></section>
 
   <!-- Back Button -->
   <div class="back-wrapper">
     <a href="index.html" class="back-btn">← Back to Dashboard</a>
   </div>
 
-  <script>
-  const quotes = {
-    home: [
-      "Believe in yourself. Small steps matter.",
-      "Consistency beats motivation every day.",
-      "Your future is created by what you do today.",
-      "Progress, not perfection."
-    ],
-    stories: [
-      "Every rejection is a redirection.",
-      "Someone else’s success is proof it’s possible.",
-      "Failure is not the opposite of success. It’s part of it.",
-      "Your journey is unique. Own it."
-    ],
-    tips: [
-      "Strong basics create strong confidence.",
-      "Preparation today removes fear tomorrow.",
-      "Skills get you shortlisted. Attitude gets you hired.",
-      "Discipline turns dreams into offers."
-    ]
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAGc7ecwllV_lDS-lOedGgIusj6CVr3iA",
+    authDomain: "mindmate-925cb.firebaseapp.com",
+    projectId: "mindmate-925cb",
+    storageBucket: "mindmate-925cb.appspot.com",
+    messagingSenderId: "985607995996",
+    appId: "1:985607995996:web:9ed710e18bc5ade43b1c99"
   };
 
-  // Detect page
-  let pageType = "home";
-  if (window.location.pathname.includes("stories")) pageType = "stories";
-  if (window.location.pathname.includes("tips")) pageType = "tips";
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  // Pick random quote
-  const selectedQuotes = quotes[pageType];
-  const randomQuote =
-    selectedQuotes[Math.floor(Math.random() * selectedQuotes.length)];
+  const tipsContainer = document.getElementById("tipsContainer");
 
-  // Insert quote
-  document.getElementById("quoteBox").innerText = `"${randomQuote}"`;
+  async function loadTips() {
+    const snapshot = await getDocs(collection(db, "tips"));
+
+    snapshot.forEach(doc => {
+      const tip = doc.data();
+      console.log("Tip:", tip);   
+      const div = document.createElement("div");
+      div.className = "tip-card";
+
+      div.innerHTML = `
+        <div class="tip-icon">${tip.icon}</div>
+        <div class="tip-content">
+          <h3>${tip.title}</h3>
+          <p>${tip.description}</p>
+        </div>
+      `;
+
+      tipsContainer.appendChild(div);
+    });
+  }
+
+  loadTips();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAGc7ecwllV_lDS-lOedGgIusj6CVr3iA",
+    authDomain: "mindmate-925cb.firebaseapp.com",
+    projectId: "mindmate-925cb",
+    storageBucket: "mindmate-925cb.appspot.com",
+    messagingSenderId: "985607995996",
+    appId: "1:985607995996:web:9ed710e18bc5ade43b1c99"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const quoteBox = document.getElementById("quoteBox");
+
+  async function loadQuote() {
+    const q = query(
+      collection(db, "quotes"),
+      where("page", "==", "tips")
+    );
+
+    const snapshot = await getDocs(q);
+    const quotes = snapshot.docs.map(doc => doc.data().text);
+
+    if (quotes.length > 0) {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteBox.innerText = `"${randomQuote}"`;
+    }
+  }
+
+  loadQuote();
 </script>
 
 </body>

@@ -8,126 +8,108 @@
 
   <h1>🌟 Inspiring Placement Stories</h1>
   <p>Real journeys. Real motivation.</p>
+  <div class="quote" id="quoteBox"></div>
+  <div id="storiesContainer"></div>
+  <button id="showMoreBtn">Show More Stories</button>
 
   
-
-  <div class="story-card">
-  <h3>🚀 From Rejection to Offer</h3>
-  <p>I faced multiple interview rejections, but I stayed consistent with daily practice and mock interviews. Over time, my confidence improved and I finally secured my first job offer.</p>
-  <p class="story-meta">Company: Amazon | Role: SDE</p>
-</div>
-
-<div class="story-card">
-  <h3>💡 Confidence Changed Everything</h3>
-  <p>I realized that communication was as important as coding skills. I worked on explaining my thoughts clearly and that helped me perform better in interviews.</p>
-  <p class="story-meta">Company: Infosys | Role: System Engineer</p>
-</div>
-
-<div class="story-card">
-  <h3>📘 Consistency Over Talent</h3>
-  <p>I was not the smartest student, but I practiced every day. Small consistent efforts helped me improve my problem-solving skills.</p>
-  <p class="story-meta">Company: Accenture | Role: Associate Software Engineer</p>
-</div>
-
-<div class="story-card">
-  <h3>🌱 Learning from Failures</h3>
-  <p>Every rejection taught me something new. I improved my resume, worked on fundamentals, and stayed patient throughout the process.</p>
-  <p class="story-meta">Company: Wipro | Role: Project Engineer</p>
-</div>
-
-<button id="showMoreBtn">Show More Stories</button>
-
-
-<div class="more-stories">
-  <div class="story-card">
-  <h3>🔥 One Opportunity Is Enough</h3>
-  <p>I faced many rejections and self-doubt, but I kept applying and learning. One opportunity was enough to change everything.</p>
-  <p class="story-meta">Company: Capgemini | Role: Analyst</p>
-</div>
-
-<div class="story-card">
-  <h3>🧠 Strong Fundamentals Matter</h3>
-  <p>I focused on core subjects like DBMS, OOPS, and OS. This helped me confidently answer technical interview questions.</p>
-  <p class="story-meta">Company: Cognizant | Role: Programmer Analyst</p>
-</div>
-
-<div class="story-card">
-  <h3>📈 Practice Makes You Better</h3>
-  <p>Mock interviews helped me reduce fear and nervousness. Practicing regularly made real interviews easier.</p>
-  <p class="story-meta">Company: Deloitte | Role: Technology Consultant</p>
-</div>
-
-<div class="story-card">
-  <h3>🎯 Discipline and Planning</h3>
-  <p>I followed a structured daily routine for learning and revision. Discipline helped me stay focused and prepared.</p>
-  <p class="story-meta">Company: HCL | Role: Graduate Engineer Trainee</p>
-</div>
-
-<div class="story-card">
-  <h3>💬 Communication Is Key</h3>
-  <p>Clear communication helped me explain my ideas better during interviews. This made a big difference in HR rounds.</p>
-  <p class="story-meta">Company: IBM | Role: Application Developer</p>
-</div>
-
-<div class="story-card">
-  <h3>🌟 Believe in Yourself</h3>
-  <p>Believing in myself and trusting the process helped me stay motivated. Self-confidence played a major role in my success.</p>
-  <p class="story-meta">Company: Tech Mahindra | Role: Software Engineer</p>
-</div>
-</div>
-
-  
-
-
   <div class="back-wrapper">
   <a href="index.html" class="back-btn">← Back to Dashboard</a>
 </div>
 
-  <script>
-  const showMoreBtn = document.getElementById("showMoreBtn");
-  const moreStories = document.querySelector(".more-stories");
 
-  showMoreBtn.addEventListener("click", () => {
-    moreStories.style.display = "block";
-    showMoreBtn.style.display = "none";
-  });
-</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<script>
-  const quotes = {
-    home: [
-      "Believe in yourself. Small steps matter.",
-      "Consistency beats motivation every day.",
-      "Your future is created by what you do today.",
-      "Progress, not perfection."
-    ],
-    stories: [
-      "Every rejection is a redirection.",
-      "Someone else’s success is proof it’s possible.",
-      "Failure is not the opposite of success. It’s part of it.",
-      "Your journey is unique. Own it."
-    ],
-    tips: [
-      "Strong basics create strong confidence.",
-      "Preparation today removes fear tomorrow.",
-      "Skills get you shortlisted. Attitude gets you hired.",
-      "Discipline turns dreams into offers."
-    ]
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAGc7ecwllV_lDS-lOedGgIusj6CVr3iA",
+    authDomain: "mindmate-925cb.firebaseapp.com",
+    projectId: "mindmate-925cb",
+    storageBucket: "mindmate-925cb.appspot.com",
+    messagingSenderId: "985607995996",
+    appId: "1:985607995996:web:9ed710e18bc5ade43b1c99"
   };
 
-  // Detect page
-  let pageType = "home";
-  if (window.location.pathname.includes("stories")) pageType = "stories";
-  if (window.location.pathname.includes("tips")) pageType = "tips";
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  // Pick random quote
-  const selectedQuotes = quotes[pageType];
-  const randomQuote =
-    selectedQuotes[Math.floor(Math.random() * selectedQuotes.length)];
+  const storiesContainer = document.getElementById("storiesContainer");
+  const showMoreBtn = document.getElementById("showMoreBtn");
 
-  // Insert quote
-  document.getElementById("quoteBox").innerText = `"${randomQuote}"`;
+  let allStories = [];
+  let visibleCount = 4;
+
+  async function loadStories() {
+    const snapshot = await getDocs(collection(db, "stories"));
+    allStories = snapshot.docs.map(doc => doc.data());
+    renderStories();
+  }
+
+  function renderStories() {
+    storiesContainer.innerHTML = "";
+
+    allStories.slice(0, visibleCount).forEach(story => {
+      const div = document.createElement("div");
+      div.className = "story-card";
+      div.innerHTML = `
+        <h3>${story.title}</h3>
+        <p>${story.content}</p>
+        <p class="story-meta">Company: ${story.company} | Role: ${story.role}</p>
+      `;
+      storiesContainer.appendChild(div);
+    });
+
+    if (visibleCount >= allStories.length) {
+      showMoreBtn.style.display = "none";
+    }
+  }
+
+  showMoreBtn.addEventListener("click", () => {
+    visibleCount = allStories.length;
+    renderStories();
+  });
+
+  loadStories();
 </script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAGc7ecwllV_lDS-lOedGgIusj6CVr3iA",
+    authDomain: "mindmate-925cb.firebaseapp.com",
+    projectId: "mindmate-925cb",
+    storageBucket: "mindmate-925cb.appspot.com",
+    messagingSenderId: "985607995996",
+    appId: "1:985607995996:web:9ed710e18bc5ade43b1c99"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const quoteBox = document.getElementById("quoteBox");
+
+  async function loadQuote() {
+    const q = query(
+      collection(db, "quotes"),
+      where("page", "==", "stories")
+    );
+
+    const snapshot = await getDocs(q);
+    const quotes = snapshot.docs.map(doc => doc.data().text);
+
+    if (quotes.length > 0) {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteBox.innerText = `"${randomQuote}"`;
+    }
+  }
+
+  loadQuote();
+</script>
+
+
 
 </body>
 </html>
