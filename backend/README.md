@@ -45,7 +45,7 @@ cp .env.example .env
 python app.py
 ```
 
-Backend runs on `http://localhost:5000`
+Backend runs on `http://localhost:8080`
 
 ---
 
@@ -254,15 +254,15 @@ CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "app:app"]
 
 ```bash
 # Test health
-curl http://localhost:5000/health
+curl http://localhost:8080/health
 
 # Test chat
-curl -X POST http://localhost:5000/chat \
+curl -X POST http://localhost:8080/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "I am stressed about placements", "userId": "test_user"}'
 
 # Test distress detection
-curl -X POST http://localhost:5000/chat \
+curl -X POST http://localhost:8080/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "I want to end it all", "userId": "test_user"}'
 ```
