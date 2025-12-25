@@ -5,14 +5,16 @@ Integrates with Google Gemini API for empathetic student wellbeing support
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import google.generativeai as genai
+from google import genai
 import os
 from datetime import datetime
 import re
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
+
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -20,11 +22,11 @@ CORS(app)  # Enable CORS for frontend requests
 
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+print("GEMINI_API_KEY loaded:", bool(GEMINI_API_KEY))
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY environment variable not set. Please set your API key.")
 
-genai.configure(api_key=GEMINI_API_KEY)
-
+client = genai.Client(api_key=GEMINI_API_KEY)
 # System prompt that defines MindMate's behavior
 SYSTEM_PROMPT = """You are MindMate, a compassionate AI friend supporting college students during stressful times. Your role is to listen, understand, and provide emotional support - NOT medical or therapeutic advice.
 
@@ -101,23 +103,21 @@ def generate_safety_warning():
 
 
 def call_gemini_api(user_message):
-    """
-    Call Google Gemini API with the user's message
-    Returns the AI's response
-    """
     try:
-        model = genai.GenerativeModel("gemini-pro")
-        
-        # Create conversation with system prompt
-        chat = model.start_chat(history=[])
-        
-        # Combine system prompt with user message
-        full_message = f"{SYSTEM_PROMPT}\n\nUser says: {user_message}\n\nRespond as MindMate:"
-        
-        response = chat.send_message(full_message)
-        
+        full_message = (
+            f"{SYSTEM_PROMPT}\n\n"
+            f"User says: {user_message}\n\n"
+            f"Respond as MindMate:"
+        )
+
+        response = client.models.generate_content(
+        model="models/gemini-2.5-flash",  # use a valid model
+        contents=full_message
+        )
+
+
         return response.text.strip()
-    
+
     except Exception as e:
         print(f"Error calling Gemini API: {str(e)}")
         return "I'm having trouble responding right now. Please try again in a moment. 💙"
@@ -135,70 +135,37 @@ def health_check():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    """
-    Main chat endpoint
-    Accepts: { "message": "user message", "userId": "user_id" }
-    Returns: { "reply": "ai response", "warning": false/true }
-    """
-    try:
-        # Get request data
-        data = request.get_json()
-        
-        if not data or "message" not in data:
-            return jsonify({
-                "error": "Missing 'message' field",
-                "reply": None
-            }), 400
-        
-        user_message = data.get("message", "").strip()
-        user_id = data.get("userId", "anonymous")
-        
-        # Validate message length
-        if len(user_message) == 0:
-            return jsonify({
-                "error": "Message cannot be empty",
-                "reply": None
-            }), 400
-        
-        if len(user_message) > 5000:
-            return jsonify({
-                "error": "Message is too long (max 5000 characters)",
-                "reply": None
-            }), 400
-        
-        # Check for distress keywords
-        distress_detected = detect_distress(user_message)
-        
-        if distress_detected:
-            # Get AI response for context
-            ai_response = call_gemini_api(user_message)
-            safety_info = generate_safety_warning()
-            
-            return jsonify({
-                "reply": ai_response,
-                "warning": safety_info["warning"],
-                "safetyMessage": safety_info["message"],
-                "resources": safety_info["resources"],
-                "timestamp": datetime.now().isoformat(),
-                "userId": user_id
-            }), 200
-        
-        # Normal conversation - call Gemini API
-        ai_response = call_gemini_api(user_message)
-        
+    data = request.get_json()
+
+    if not data or "message" not in data:
         return jsonify({
-            "reply": ai_response,
-            "warning": False,
-            "timestamp": datetime.now().isoformat(),
-            "userId": user_id
-        }), 200
-    
-    except Exception as e:
-        print(f"Error in /chat endpoint: {str(e)}")
+            "reply": "Please enter a message so I can help you 💙",
+            "warning": False
+        }), 400
+
+    user_message = data.get("message", "").strip()
+
+    if not user_message:
         return jsonify({
-            "error": "Internal server error",
-            "reply": "Sorry, I encountered an error. Please try again. 💙"
-        }), 500
+            "reply": "I didn’t catch that. Could you try typing it again?",
+            "warning": False
+        }), 400
+
+    distress_detected = detect_distress(user_message)
+    ai_response = call_gemini_api(user_message)
+
+    response = {
+        "reply": ai_response,
+        "warning": distress_detected
+    }
+
+    if distress_detected:
+        safety_info = generate_safety_warning()
+        response["safetyMessage"] = safety_info["message"]
+        response["resources"] = safety_info["resources"]
+
+    return jsonify(response), 200
+
 
 
 @app.route("/chat-history", methods=["GET"])
