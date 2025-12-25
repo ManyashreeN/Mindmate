@@ -2,52 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MindMate</title>
+  <title>MindMate | Student Support Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
- <header class="navbar">
-  <div class="logo">MindMate 🧠</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="chat.html">Chat</a>
-    <a href="stories.html">Stories</a>
-    <a href="tips.html">Tips</a>
-  </nav>
-</header>
+  <!-- =========================
+       NAVBAR
+  ========================= -->
+  <header>
+    <div class="navbar">
+      <div class="logo">MindMate 💙</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="chat.html">Chat</a>
+        <a href="stories.html">Stories</a>
+        <a href="tips.html">Tips</a>
+      </nav>
+    </div>
+  </header>
 
-  <div class="container">
-    <h1>MindMate</h1>
-    <p>Your friendly student support dashboard 🌱</p>
+  <!-- =========================
+       DASHBOARD HERO
+  ========================= -->
+  <main class="container">
 
-    <div class="quote">
-      <h2>✨ Quote of the Day</h2>
-     <p id="quoteText">"Believe in yourself. Small steps matter."</p>
+    <div class="dashboard-hero">
+      <h1>Welcome to MindMate</h1>
+      <p>Your friendly student support dashboard 🌱</p>
     </div>
 
-    <h2>Explore</h2>
+    <!-- =========================
+         QUOTE OF THE DAY
+    ========================= -->
+    <div class="quote" id="quoteBox"></div>
 
+    <!-- =========================
+         EXPLORE CARDS
+    ========================= -->
     <div class="cards">
-      <a href="chat.html" class="card">💬 Chat Support</a>
-      <a href="stories.html" class="card">📖 Inspiring Stories</a>
-      <a href="tips.html" class="card">💡 Placement Tips</a>
+
+      <a href="chat.html" class="card">
+        💬 Chat Support
+      </a>
+
+      <a href="stories.html" class="card">
+        🌟 Inspiring Stories
+      </a>
+
+      <a href="tips.html" class="card">
+        🎯 Placement Tips
+      </a>
+
     </div>
-  </div>
+
+  </main>
+
 
   <script>
-  const quotes = [
-    "Believe in yourself. Small steps matter.",
-    "Every expert was once a beginner.",
-    "Your future is created by what you do today.",
-    "Consistency beats talent when talent doesn’t work hard.",
-    "You are capable of more than you think."
-  ];
+  const quotes = {
+    home: [
+      "Believe in yourself. Small steps matter.",
+      "Consistency beats motivation every day.",
+      "Your future is created by what you do today.",
+      "Progress, not perfection."
+    ],
+    stories: [
+      "Every rejection is a redirection.",
+      "Someone else’s success is proof it’s possible.",
+      "Failure is not the opposite of success. It’s part of it.",
+      "Your journey is unique. Own it."
+    ],
+    tips: [
+      "Strong basics create strong confidence.",
+      "Preparation today removes fear tomorrow.",
+      "Skills get you shortlisted. Attitude gets you hired.",
+      "Discipline turns dreams into offers."
+    ]
+  };
 
-  const quoteElement = document.getElementById("quoteText");
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  quoteElement.textContent = `"${quotes[randomIndex]}"`;
+  // Detect page
+  let pageType = "home";
+  if (window.location.pathname.includes("stories")) pageType = "stories";
+  if (window.location.pathname.includes("tips")) pageType = "tips";
+
+  // Pick random quote
+  const selectedQuotes = quotes[pageType];
+  const randomQuote =
+    selectedQuotes[Math.floor(Math.random() * selectedQuotes.length)];
+
+  // Insert quote
+  document.getElementById("quoteBox").innerText = `"${randomQuote}"`;
 </script>
 
 </body>
