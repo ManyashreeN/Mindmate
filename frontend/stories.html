@@ -2,16 +2,16 @@
 <html>
 <head>
   <title>MindMate - Inspiring Stories</title>
-   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <h1>🌟 Inspiring Placement Stories</h1>
   <p>Real journeys. Real motivation.</p>
 
-  <hr>
+  
 
- <div class="story-card">
+  <div class="story-card">
   <h3>🚀 From Rejection to Offer</h3>
   <p>I faced multiple interview rejections, but I stayed consistent with daily practice and mock interviews. Over time, my confidence improved and I finally secured my first job offer.</p>
   <p class="story-meta">Company: Amazon | Role: SDE</p>
@@ -35,11 +35,11 @@
   <p class="story-meta">Company: Wipro | Role: Project Engineer</p>
 </div>
 
-  <button id="showMoreBtn">Show More Stories</button>
-  
-  <div class="more-stories">
+<button id="showMoreBtn">Show More Stories</button>
 
-    <div class="story-card">
+
+<div class="more-stories">
+  <div class="story-card">
   <h3>🔥 One Opportunity Is Enough</h3>
   <p>I faced many rejections and self-doubt, but I kept applying and learning. One opportunity was enough to change everything.</p>
   <p class="story-meta">Company: Capgemini | Role: Analyst</p>
@@ -74,13 +74,16 @@
   <p>Believing in myself and trusting the process helped me stay motivated. Self-confidence played a major role in my success.</p>
   <p class="story-meta">Company: Tech Mahindra | Role: Software Engineer</p>
 </div>
-  </div>
+</div>
+
   
-  <hr>
 
-  <a href="index.html">⬅ Back to Dashboard</a>
 
-    <script>
+  <div class="back-wrapper">
+  <a href="index.html" class="back-btn">← Back to Dashboard</a>
+</div>
+
+  <script>
   const showMoreBtn = document.getElementById("showMoreBtn");
   const moreStories = document.querySelector(".more-stories");
 
@@ -88,6 +91,42 @@
     moreStories.style.display = "block";
     showMoreBtn.style.display = "none";
   });
+</script>
+
+<script>
+  const quotes = {
+    home: [
+      "Believe in yourself. Small steps matter.",
+      "Consistency beats motivation every day.",
+      "Your future is created by what you do today.",
+      "Progress, not perfection."
+    ],
+    stories: [
+      "Every rejection is a redirection.",
+      "Someone else’s success is proof it’s possible.",
+      "Failure is not the opposite of success. It’s part of it.",
+      "Your journey is unique. Own it."
+    ],
+    tips: [
+      "Strong basics create strong confidence.",
+      "Preparation today removes fear tomorrow.",
+      "Skills get you shortlisted. Attitude gets you hired.",
+      "Discipline turns dreams into offers."
+    ]
+  };
+
+  // Detect page
+  let pageType = "home";
+  if (window.location.pathname.includes("stories")) pageType = "stories";
+  if (window.location.pathname.includes("tips")) pageType = "tips";
+
+  // Pick random quote
+  const selectedQuotes = quotes[pageType];
+  const randomQuote =
+    selectedQuotes[Math.floor(Math.random() * selectedQuotes.length)];
+
+  // Insert quote
+  document.getElementById("quoteBox").innerText = `"${randomQuote}"`;
 </script>
 
 </body>
