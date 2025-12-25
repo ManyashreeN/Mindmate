@@ -5,14 +5,14 @@ Integrates with Google Gemini API for empathetic student wellbeing support
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from google import genai
+#from google import genai
 import os
 from datetime import datetime
 import re
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
+#load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 
 
@@ -21,12 +21,12 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend requests
 
 # Configure Gemini API
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-print("GEMINI_API_KEY loaded:", bool(GEMINI_API_KEY))
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY environment variable not set. Please set your API key.")
+#GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+#print("GEMINI_API_KEY loaded:", bool(GEMINI_API_KEY))
+#if not GEMINI_API_KEY:
+   # print("WARNING: GEMINI_API_KEY not set. Gemini responses will not work.")
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+#client = genai.Client(api_key=GEMINI_API_KEY)
 # System prompt that defines MindMate's behavior
 SYSTEM_PROMPT = """You are MindMate, a compassionate AI friend supporting college students during stressful times. Your role is to listen, understand, and provide emotional support - NOT medical or therapeutic advice.
 
@@ -101,26 +101,34 @@ def generate_safety_warning():
         ]
     }
 
-
 def call_gemini_api(user_message):
     try:
+        import google.generativeai as genai
+
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return "Gemini API key is not configured."
+
+        genai.configure(api_key=api_key)
+
+        model = genai.GenerativeModel("gemini-pro")
+
         full_message = (
             f"{SYSTEM_PROMPT}\n\n"
             f"User says: {user_message}\n\n"
             f"Respond as MindMate:"
         )
 
-        response = client.models.generate_content(
-        model="models/gemini-2.5-flash",  # use a valid model
-        contents=full_message
-        )
-
-
+        response = model.generate_content(full_message)
         return response.text.strip()
 
     except Exception as e:
-        print(f"Error calling Gemini API: {str(e)}")
-        return "I'm having trouble responding right now. Please try again in a moment. 💙"
+        print("Gemini error:", e)
+        return "I'm having trouble responding right now. Please try again later 💙"
+
+@app.route("/")
+def root():
+    return "MindMate backend running", 200
 
 
 @app.route("/health", methods=["GET"])
