@@ -5,28 +5,28 @@ Integrates with Google Gemini API for empathetic student wellbeing support
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-#from google import genai
 import os
+import google.generativeai as genai
 from datetime import datetime
 import re
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-#load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
-
-
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend requests
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+print("GEMINI_API_KEY loaded:", bool(GEMINI_API_KEY))
 
-# Configure Gemini API
-#GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-#print("GEMINI_API_KEY loaded:", bool(GEMINI_API_KEY))
-#if not GEMINI_API_KEY:
-   # print("WARNING: GEMINI_API_KEY not set. Gemini responses will not work.")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel("models/gemini-flash-latest")
+else:
+    gemini_model = None
 
-#client = genai.Client(api_key=GEMINI_API_KEY)
+
 # System prompt that defines MindMate's behavior
 SYSTEM_PROMPT = """You are MindMate, a compassionate AI friend supporting college students during stressful times. Your role is to listen, understand, and provide emotional support - NOT medical or therapeutic advice.
 
@@ -102,24 +102,17 @@ def generate_safety_warning():
     }
 
 def call_gemini_api(user_message):
+    if gemini_model is None:
+        return "AI support is temporarily unavailable. Please try again later 💙"
+
     try:
-        import google.generativeai as genai
-
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            return "Gemini API key is not configured."
-
-        genai.configure(api_key=api_key)
-
-        model = genai.GenerativeModel("gemini-pro")
-
         full_message = (
             f"{SYSTEM_PROMPT}\n\n"
             f"User says: {user_message}\n\n"
             f"Respond as MindMate:"
         )
 
-        response = model.generate_content(full_message)
+        response = gemini_model.generate_content(full_message)
         return response.text.strip()
 
     except Exception as e:
