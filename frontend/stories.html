@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>MindMate - Inspiring Stories</title>
+   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -10,24 +11,84 @@
 
   <hr>
 
-  <h3>From Rejection to Offer</h3>
-  <p>
-    I faced multiple interview rejections, but I stayed consistent with DSA and mock interviews.
-    Eventually, I secured my first offer.
-  </p>
-  <p><strong>Company:</strong> Amazon | <strong>Role:</strong> SDE</p>
+ <div class="story-card">
+  <h3>🚀 From Rejection to Offer</h3>
+  <p>I faced multiple interview rejections, but I stayed consistent with daily practice and mock interviews. Over time, my confidence improved and I finally secured my first job offer.</p>
+  <p class="story-meta">Company: Amazon | Role: SDE</p>
+</div>
 
-  <hr>
+<div class="story-card">
+  <h3>💡 Confidence Changed Everything</h3>
+  <p>I realized that communication was as important as coding skills. I worked on explaining my thoughts clearly and that helped me perform better in interviews.</p>
+  <p class="story-meta">Company: Infosys | Role: System Engineer</p>
+</div>
 
-  <h3>Confidence Changed Everything</h3>
-  <p>
-    I wasn’t the best coder, but improving my communication and practicing basics helped me crack interviews.
-  </p>
-  <p><strong>Company:</strong> Infosys | <strong>Role:</strong> System Engineer</p>
+<div class="story-card">
+  <h3>📘 Consistency Over Talent</h3>
+  <p>I was not the smartest student, but I practiced every day. Small consistent efforts helped me improve my problem-solving skills.</p>
+  <p class="story-meta">Company: Accenture | Role: Associate Software Engineer</p>
+</div>
 
+<div class="story-card">
+  <h3>🌱 Learning from Failures</h3>
+  <p>Every rejection taught me something new. I improved my resume, worked on fundamentals, and stayed patient throughout the process.</p>
+  <p class="story-meta">Company: Wipro | Role: Project Engineer</p>
+</div>
+
+  <button id="showMoreBtn">Show More Stories</button>
+  
+  <div class="more-stories">
+
+    <div class="story-card">
+  <h3>🔥 One Opportunity Is Enough</h3>
+  <p>I faced many rejections and self-doubt, but I kept applying and learning. One opportunity was enough to change everything.</p>
+  <p class="story-meta">Company: Capgemini | Role: Analyst</p>
+</div>
+
+<div class="story-card">
+  <h3>🧠 Strong Fundamentals Matter</h3>
+  <p>I focused on core subjects like DBMS, OOPS, and OS. This helped me confidently answer technical interview questions.</p>
+  <p class="story-meta">Company: Cognizant | Role: Programmer Analyst</p>
+</div>
+
+<div class="story-card">
+  <h3>📈 Practice Makes You Better</h3>
+  <p>Mock interviews helped me reduce fear and nervousness. Practicing regularly made real interviews easier.</p>
+  <p class="story-meta">Company: Deloitte | Role: Technology Consultant</p>
+</div>
+
+<div class="story-card">
+  <h3>🎯 Discipline and Planning</h3>
+  <p>I followed a structured daily routine for learning and revision. Discipline helped me stay focused and prepared.</p>
+  <p class="story-meta">Company: HCL | Role: Graduate Engineer Trainee</p>
+</div>
+
+<div class="story-card">
+  <h3>💬 Communication Is Key</h3>
+  <p>Clear communication helped me explain my ideas better during interviews. This made a big difference in HR rounds.</p>
+  <p class="story-meta">Company: IBM | Role: Application Developer</p>
+</div>
+
+<div class="story-card">
+  <h3>🌟 Believe in Yourself</h3>
+  <p>Believing in myself and trusting the process helped me stay motivated. Self-confidence played a major role in my success.</p>
+  <p class="story-meta">Company: Tech Mahindra | Role: Software Engineer</p>
+</div>
+  </div>
+  
   <hr>
 
   <a href="index.html">⬅ Back to Dashboard</a>
+
+    <script>
+  const showMoreBtn = document.getElementById("showMoreBtn");
+  const moreStories = document.querySelector(".more-stories");
+
+  showMoreBtn.addEventListener("click", () => {
+    moreStories.style.display = "block";
+    showMoreBtn.style.display = "none";
+  });
+</script>
 
 </body>
 </html>
