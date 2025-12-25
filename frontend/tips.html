@@ -1,37 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>MindMate - Placement Tips</title>
+  <meta charset="UTF-8">
+  <title>Placement Tips | MindMate</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <h1>🎯 Placement Tips</h1>
-  <p>Small habits that make a big difference.</p>
+  <!-- Page Header -->
+  <header class="tips-header">
+    <h1>🎯 Placement Tips</h1>
+    <p>Small habits that make a big difference.</p>
+  </header>
 
-  <hr>
+  <!-- Tips Section -->
+  <section class="tips-container">
 
-  <h3>📘 DSA Consistency</h3>
-  <p>
-    Practice at least 2 problems daily. Focus on understanding patterns instead of memorizing solutions.
-  </p>
+    <div class="tip-card">
+      <div class="tip-icon">📘</div>
+      <div class="tip-content">
+        <h3>DSA Consistency</h3>
+        <p>
+          Practice at least 2 problems daily. Focus on understanding patterns
+          instead of memorizing solutions.
+        </p>
+      </div>
+    </div>
 
-  <hr>
+    <div class="tip-card">
+      <div class="tip-icon">🗣️</div>
+      <div class="tip-content">
+        <h3>Communication Skills</h3>
+        <p>
+          Explain your approach clearly. Interviewers value clarity
+          as much as correctness.
+        </p>
+      </div>
+    </div>
 
-  <h3>🗣 Communication Skills</h3>
-  <p>
-    Practice explaining your approach clearly. Interviewers value clarity as much as correctness.
-  </p>
+    <div class="tip-card">
+      <div class="tip-icon">📄</div>
+      <div class="tip-content">
+        <h3>Resume Basics</h3>
+        <p>
+          Keep your resume one page, clean, and focused on impact
+          rather than listing tools.
+        </p>
+      </div>
+    </div>
 
-  <hr>
+    <!-- EXTRA TIPS (Value Add) -->
+    <div class="tip-card">
+      <div class="tip-icon">🧠</div>
+      <div class="tip-content">
+        <h3>Strong Fundamentals</h3>
+        <p>
+          Revise DBMS, OS, OOPS, and CN regularly.
+          Basics create confidence during interviews.
+        </p>
+      </div>
+    </div>
 
-  <h3>📝 Resume Basics</h3>
-  <p>
-    Keep your resume simple, one page, and focused on impact rather than just tools.
-  </p>
+    <div class="tip-card">
+      <div class="tip-icon">🎤</div>
+      <div class="tip-content">
+        <h3>Mock Interviews</h3>
+        <p>
+          Practice mock interviews to reduce fear and improve real-time thinking.
+        </p>
+      </div>
+    </div>
 
-  <hr>
+  </section>
 
-  <a href="index.html">⬅ Back to Dashboard</a>
+  <!-- Back Button -->
+  <div class="back-wrapper">
+    <a href="index.html" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <script>
+  const quotes = {
+    home: [
+      "Believe in yourself. Small steps matter.",
+      "Consistency beats motivation every day.",
+      "Your future is created by what you do today.",
+      "Progress, not perfection."
+    ],
+    stories: [
+      "Every rejection is a redirection.",
+      "Someone else’s success is proof it’s possible.",
+      "Failure is not the opposite of success. It’s part of it.",
+      "Your journey is unique. Own it."
+    ],
+    tips: [
+      "Strong basics create strong confidence.",
+      "Preparation today removes fear tomorrow.",
+      "Skills get you shortlisted. Attitude gets you hired.",
+      "Discipline turns dreams into offers."
+    ]
+  };
+
+  // Detect page
+  let pageType = "home";
+  if (window.location.pathname.includes("stories")) pageType = "stories";
+  if (window.location.pathname.includes("tips")) pageType = "tips";
+
+  // Pick random quote
+  const selectedQuotes = quotes[pageType];
+  const randomQuote =
+    selectedQuotes[Math.floor(Math.random() * selectedQuotes.length)];
+
+  // Insert quote
+  document.getElementById("quoteBox").innerText = `"${randomQuote}"`;
+</script>
 
 </body>
 </html>
