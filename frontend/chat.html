@@ -55,7 +55,13 @@ async function sendMessage() {
   userDiv.textContent = message;
   chatBox.appendChild(userDiv);
 
-  input.value = "";
+  const typingDiv = document.createElement("div");
+typingDiv.className = "message bot typing";
+typingDiv.textContent = "MindMate is typing...";
+chatBox.appendChild(typingDiv);
+chatBox.scrollTop = chatBox.scrollHeight;
+
+input.value = "";
 
   try {
     const response = await fetch(
@@ -73,6 +79,8 @@ async function sendMessage() {
     );
 
     const data = await response.json();
+
+    typingDiv.remove();
 
     const botDiv = document.createElement("div");
     botDiv.className = "message bot";
