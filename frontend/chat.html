@@ -1,27 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>MindMate - Chat</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-  <h1>💬 Chat Support</h1>
-  <p>Talk freely. I'm here to listen 🌱</p>
+  <header class="navbar">
+    <div class="logo">MindMate 🧠</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="chat.html">Chat</a>
+      <a href="stories.html">Stories</a>
+      <a href="tips.html">Tips</a>
+    </nav>
+  </header>
 
-  <hr>
+  <div class="chat-container">
 
-  <div>
-    <p><strong>You:</strong> I'm feeling stressed about placements.</p>
-    <p><strong>MindMate:</strong> That sounds tough. Want to tell me more?</p>
+    <div class="chat-box">
+      <div class="message bot">
+        Hello 👋 I’m here to listen. How are you feeling today?
+      </div>
+
+      <div class="message user">
+        I’m feeling stressed about placements.
+      </div>
+
+      <div class="message bot">
+        That sounds really tough. Want to tell me what’s worrying you the most?
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message...">
+<button onclick="sendMessage()">Send</button>
+    </div>
+
   </div>
+<script>
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
 
-  <hr>
+    if (message === "") return;
 
-  <input type="text" placeholder="Type your message here..." />
-  <button>Send</button>
+    const chatBox = document.querySelector(".chat-box");
 
-  <br><br>
-  <a href="index.html">⬅ Back to Dashboard</a>
+    // Show user message
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.textContent = message;
+    chatBox.appendChild(userDiv);
+
+    input.value = "";
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: message
+        })
+      });
+
+      const data = await response.json();
+
+      const botDiv = document.createElement("div");
+      botDiv.className = "message bot";
+      botDiv.textContent = data.reply;
+      chatBox.appendChild(botDiv);
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+    } catch (error) {
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "message bot";
+      errorDiv.textContent = "❌ Error connecting to backend.";
+      chatBox.appendChild(errorDiv);
+    }
+  }
+</script>
 
 </body>
 </html>
